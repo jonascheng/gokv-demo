@@ -14,7 +14,7 @@ type FooV2 struct {
 	Address string `json:"address"`
 }
 
-func newFooV2(name string, age uint, address string) *FooV2 {
+func NewFooV2(name string, age uint, address string) *FooV2 {
 	return &FooV2{
 		Version: "2.0",
 		ID:      uuid.Must(uuid.NewV4()).String(),
@@ -29,4 +29,5 @@ type FooV2Repository interface {
 	Save(ctx context.Context, foo *FooV2) error
 	GetByID(ctx context.Context, id string) (*FooV2, error)
 	Update(ctx context.Context, foo *FooV2) error
+	RemoveByID(ctx context.Context, id string) error
 }

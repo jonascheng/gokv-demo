@@ -1,18 +1,19 @@
 package main
 
 import (
-	"fmt"
+	"context"
+	"log"
 
-	"github.com/philippgille/gokv"
 	"github.com/philippgille/gokv/encoding"
 	"github.com/philippgille/gokv/redis"
+
+	"github.com/jonascheng/gokv-demo/domain"
+	"github.com/jonascheng/gokv-demo/repository"
+	"github.com/jonascheng/gokv-demo/usecase"
 )
 
-type foo struct {
-	Bar string
-}
-
-func main() {
+func runUsecaseWithRedis() {
+	// run use cases with redis back storage
 	options := redis.DefaultOptions // Address: "localhost:6379", Password: "", DB: 0
 	options.Password = "supersecret"
 	options.Codec = encoding.Gob
@@ -24,37 +25,35 @@ func main() {
 	}
 	defer client.Close()
 
+	// repo
+	repoFooV1 := repository.NewFooV1Repository(client)
+	repoFooV2 := repository.NewFooV2Repository(client)
+
+	// usecase
+	usecaseFoo := usecase.NewFooUsecase(repoFooV1, repoFooV2)
+
 	// Store, retrieve, print and delete a value
-	interactWithStore(client)
+	usecaseRunner(usecaseFoo)
 }
 
-// interactWithStore stores, retrieves, prints and deletes a value.
-// It's completely independent of the store implementation.
-func interactWithStore(store gokv.Store) {
-	// Store value
-	val := foo{
-		Bar: "baz",
-	}
-	err := store.Set("foo123", val)
-	if err != nil {
-		panic(err)
-	}
+func main() {
+	runUsecaseWithRedis()
+}
 
-	// Retrieve value
-	retrievedVal := new(foo)
-	found, err := store.Get("foo123", retrievedVal)
-	if err != nil {
-		panic(err)
-	}
-	if !found {
-		panic("Value not found")
-	}
+func usecaseRunner(usecase domain.FooUseCase) {
+	ctx := context.TODO()
 
-	fmt.Printf("foo: %+v", *retrievedVal) // Prints `foo: {Bar:baz}`
+	fooV1 := domain.NewFooV1("Jonas", 18)
+	usecase.StoreFooV1(ctx, fooV1)
+	log.Printf("Store fooV1: %v\n", fooV1)
 
-	// Delete value
-	err = store.Delete("foo123")
-	if err != nil {
-		panic(err)
-	}
+	// log.Println(val)
+
+	// repo := repository.NewFooV1Repository(store)
+	// repo.Save(ctx, val)
+
+	// val2, _ := repo.GetByID(ctx, val.ID)
+	// log.Println(val2)
+
+	// repo.RemoveByID(ctx, val.ID)
 }
