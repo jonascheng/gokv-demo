@@ -47,13 +47,10 @@ func usecaseRunner(usecase domain.FooUseCase) {
 	usecase.StoreFooV1(ctx, fooV1)
 	log.Printf("Store fooV1: %v\n", fooV1)
 
-	// log.Println(val)
+	fooV2 := domain.NewFooV2("Jonas", 18, "Taipei City")
+	usecase.StoreFooV2(ctx, fooV2)
+	log.Printf("Store fooV2: %v\n", fooV2)
 
-	// repo := repository.NewFooV1Repository(store)
-	// repo.Save(ctx, val)
-
-	// val2, _ := repo.GetByID(ctx, val.ID)
-	// log.Println(val2)
-
-	// repo.RemoveByID(ctx, val.ID)
+	fooV2FromV1, _ := usecase.GetFooV2fromV1(ctx, fooV1.ID)
+	log.Printf("Get fooV2 from fooV1 to test adding new field: %v\n", fooV2FromV1)
 }

@@ -8,15 +8,15 @@ RUN apk add --no-cache git build-base && \
   echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
   apk add --no-cache upx
 
-WORKDIR /go/src/github.com/jonascheng/speedtest-go/
+WORKDIR /go/src/github.com/jonascheng/gokv-demo/
 COPY . .
 
-RUN make build && upx ./bin/speedtest-go
+RUN make build
 
 FROM alpine:3.14
 
 WORKDIR /app
 
-COPY --from=build-env /go/src/github.com/jonascheng/speedtest-go/bin/speedtest-go .
+COPY --from=build-env /go/src/github.com/jonascheng/gokv-demo/bin/gokv-demo .
 
-ENTRYPOINT [ "./speedtest-go" ]
+ENTRYPOINT [ "./gokv-demo" ]

@@ -18,7 +18,6 @@ func NewFooV2(name string, age uint, address string) *FooV2 {
 	return &FooV2{
 		Version: "2.0",
 		ID:      uuid.Must(uuid.NewV4()).String(),
-
 		Name:    name,
 		Age:     uint8(age),
 		Address: address,
