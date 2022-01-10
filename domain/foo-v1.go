@@ -23,8 +23,8 @@ func NewFooV1(name string, age uint) *FooV1 {
 }
 
 type FooV1Repository interface {
-	Save(ctx context.Context, foo *FooV1) error
+	Save(ctx context.Context, foo *FooV1) (*FooV1, error)
 	GetByID(ctx context.Context, id string) (*FooV1, error)
-	Update(ctx context.Context, foo *FooV1) error
-	RemoveByID(ctx context.Context, id string) error
+	Update(ctx context.Context, foo *FooV1) (*FooV1, error)
+	DeleteByID(ctx context.Context, id string) error
 }

@@ -18,7 +18,7 @@ func NewFooUsecase(repoFooV1 domain.FooV1Repository, repoFooV2 domain.FooV2Repos
 	}
 }
 
-func (this *fooUsecase) StoreFooV1(ctx context.Context, foo *domain.FooV1) error {
+func (this *fooUsecase) StoreFooV1(ctx context.Context, foo *domain.FooV1) (*domain.FooV1, error) {
 	return this.repoFooV1.Save(ctx, foo)
 }
 
@@ -26,7 +26,7 @@ func (this *fooUsecase) GetFooV1ByID(ctx context.Context, id string) (*domain.Fo
 	return this.repoFooV1.GetByID(ctx, id)
 }
 
-func (this *fooUsecase) StoreFooV2(ctx context.Context, foo *domain.FooV2) error {
+func (this *fooUsecase) StoreFooV2(ctx context.Context, foo *domain.FooV2) (*domain.FooV2, error) {
 	return this.repoFooV2.Save(ctx, foo)
 }
 
@@ -39,9 +39,11 @@ func (this *fooUsecase) GetFooV2fromV1(ctx context.Context, id string) (*domain.
 }
 
 func (this *fooUsecase) GetFooV1fromV2(ctx context.Context, id string) (*domain.FooV1, error) {
-	return nil, nil
+	return this.repoFooV1.GetByID(ctx, id)
 }
 
 func (this *fooUsecase) MigrateFooV1toV2(ctx context.Context, id string) (*domain.FooV2, error) {
-	return nil, nil
+	// load from v1
+	fooV2, _ := this.GetFooV2fromV1(ctx, id)
+	return this.StoreFooV2(ctx, fooV2)
 }
