@@ -13,6 +13,8 @@ import (
 )
 
 func runUsecaseWithRedis() {
+	log.Println("=== Run usecase with Redis ===")
+
 	// run use cases with redis back storage
 	options := redis.DefaultOptions  // Address: "localhost:6379",
 	options.Password = "supersecret" // Password: "", DB: 0,
@@ -36,6 +38,8 @@ func runUsecaseWithRedis() {
 }
 
 func runUsecaseWithPGSQL() {
+	log.Println("=== Run usecase with PGSQL ===")
+
 	// run use cases with pgsql back storage
 	options := postgresql.DefaultOptions                                               // TableName: "Item", MaxOpenConnections: 100,
 	options.ConnectionURL = "postgres://postgres:supersecret@/kv_demo?sslmode=disable" // ConnectionURL: "postgres://postgres@/" + defaultDBname + "?sslmode=disable",
@@ -59,7 +63,9 @@ func runUsecaseWithPGSQL() {
 }
 
 func main() {
+	log.Println("")
 	runUsecaseWithRedis()
+	log.Println("")
 	runUsecaseWithPGSQL()
 }
 
